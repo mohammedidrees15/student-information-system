@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Information System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    main {
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    table th {
+      background-color: #333;
+      color: #fff;
+    }
+    .form-container {
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .form-container input, .form-container select, .form-container button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    .delete-btn {
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+    }
+    .delete-btn:hover {
+      background-color: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Student Information System</h1>
+  </header>
+  <main>
+    <section>
+      <div class="form-container">
+        <h2>Add Student</h2>
+        <input type="text" id="studentName" placeholder="Student Name">
+        <input type="text" id="studentDOB" placeholder="Date of Birth (YYYY-MM-DD)">
+        <input type="text" id="studentContact" placeholder="Contact">
+        <input type="text" id="studentEmail" placeholder="Email">
+        <input type="text" id="studentDept" placeholder="Department">
+        <button onclick="addStudent()">Add Student</button>
+      </div>
+      <h2>Student Records</h2>
+      <table id="studentTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>DOB</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Students will be dynamically added here -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script>
+    // Load students from localStorage or initialize an empty array
+    const students = JSON.parse(localStorage.getItem('students')) || [];
+    let studentID = students.length > 0 ? students[students.length - 1].id + 1 : 1;
+
+    // Add a new student
+    function addStudent() {
+      const name = document.getElementById('studentName').value;
+      const dob = document.getElementById('studentDOB').value;
+      const contact = document.getElementById('studentContact').value;
+      const email = document.getElementById('studentEmail').value;
+      const dept = document.getElementById('studentDept').value;
+
+      // Validation
+      if (!name || !dob || !contact || !email || !dept) {
+        alert('Please fill in all fields!');
+        return;
+      }
+
+      // Add student to the array and save to localStorage
+      students.push({ id: studentID++, name, dob, contact, email, dept });
+      localStorage.setItem('students', JSON.stringify(students));
+
+      // Clear input fields
+      document.getElementById('studentName').value = '';
+      document.getElementById('studentDOB').value = '';
+      document.getElementById('studentContact').value = '';
+      document.getElementById('studentEmail').value = '';
+      document.getElementById('studentDept').value = '';
+
+      alert('Student added successfully!');
+      displayStudents();
+    }
+
+    // Display all students in the table
+    function displayStudents() {
+      const tableBody = document.getElementById('studentTable').querySelector('tbody');
+      tableBody.innerHTML = ''; // Clear table before re-rendering
+
+      students.forEach(student => {
+        const row = `
+          <tr>
+            <td>${student.id}</td>
+            <td>${student.name}</td>
+            <td>${student.dob}</td>
+            <td>${student.contact}</td>
+            <td>${student.email}</td>
+            <td>${student.dept}</td>
+            <td><button class="delete-btn" onclick="deleteStudent(${student.id})">Delete</button></td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    // Delete a student by ID
+    function deleteStudent(id) {
+      const index = students.findIndex(student => student.id === id);
+      if (index !== -1) {
+        students.splice(index, 1); // Remove the student from the array
+        localStorage.setItem('students', JSON.stringify(students)); // Save updated array to localStorage
+        displayStudents(); // Refresh the table
+        alert('Student deleted successfully!');
+      }
+    }
+
+    // Initial display of students
+    displayStudents();
+  </script>
+</body>
+</html>
