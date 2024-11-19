@@ -1,175 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Information System</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    header {
-      background: #333;
-      color: #fff;
-      padding: 10px 20px;
-      text-align: center;
-    }
-    main {
-      padding: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    table th, table td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
-    table th {
-      background-color: #333;
-      color: #fff;
-    }
-    .form-container {
-      margin-bottom: 20px;
-      background: #fff;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .form-container input, .form-container select, .form-container button {
-      margin: 10px 0;
-      padding: 10px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #333;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #555;
-    }
-    .delete-btn {
-      background-color: #d9534f;
-      color: white;
-      border: none;
-      cursor: pointer;
-      padding: 5px 10px;
-    }
-    .delete-btn:hover {
-      background-color: #c9302c;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Student Information System</h1>
-  </header>
-  <main>
-    <section>
-      <div class="form-container">
-        <h2>Add Student</h2>
-        <input type="text" id="studentName" placeholder="Student Name">
-        <input type="text" id="studentDOB" placeholder="Date of Birth (YYYY-MM-DD)">
-        <input type="text" id="studentContact" placeholder="Contact">
-        <input type="text" id="studentEmail" placeholder="Email">
-        <input type="text" id="studentDept" placeholder="Department">
-        <button onclick="addStudent()">Add Student</button>
-      </div>
-      <h2>Student Records</h2>
-      <table id="studentTable">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>DOB</th>
-            <th>Contact</th>
-            <th>Email</th>
-            <th>Department</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Students will be dynamically added here -->
-        </tbody>
-      </table>
-    </section>
-  </main>
-  <script>
-    // Load students from localStorage or initialize an empty array
-    const students = JSON.parse(localStorage.getItem('students')) || [];
-    let studentID = students.length > 0 ? students[students.length - 1].id + 1 : 1;
+    <div class="container">
+        <h1>Student Management System</h1>
+        
+        <!-- Form to add new student -->
+        <section>
+            <h2>Add New Student</h2>
+            <form id="studentForm">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required><br>
 
-    // Add a new student
-    function addStudent() {
-      const name = document.getElementById('studentName').value;
-      const dob = document.getElementById('studentDOB').value;
-      const contact = document.getElementById('studentContact').value;
-      const email = document.getElementById('studentEmail').value;
-      const dept = document.getElementById('studentDept').value;
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required><br>
 
-      // Validation
-      if (!name || !dob || !contact || !email || !dept) {
-        alert('Please fill in all fields!');
-        return;
-      }
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
 
-      // Add student to the array and save to localStorage
-      students.push({ id: studentID++, name, dob, contact, email, dept });
-      localStorage.setItem('students', JSON.stringify(students));
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone"><br>
 
-      // Clear input fields
-      document.getElementById('studentName').value = '';
-      document.getElementById('studentDOB').value = '';
-      document.getElementById('studentContact').value = '';
-      document.getElementById('studentEmail').value = '';
-      document.getElementById('studentDept').value = '';
+                <label for="address">Address:</label>
+                <textarea id="address" name="address"></textarea><br>
 
-      alert('Student added successfully!');
-      displayStudents();
-    }
+                <button type="submit">Add Student</button>
+            </form>
+        </section>
 
-    // Display all students in the table
-    function displayStudents() {
-      const tableBody = document.getElementById('studentTable').querySelector('tbody');
-      tableBody.innerHTML = ''; // Clear table before re-rendering
+        <!-- Section for showing students list -->
+        <section>
+            <h2>Students List</h2>
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Student records will appear here -->
+                </tbody>
+            </table>
+        </section>
 
-      students.forEach(student => {
-        const row = `
-          <tr>
-            <td>${student.id}</td>
-            <td>${student.name}</td>
-            <td>${student.dob}</td>
-            <td>${student.contact}</td>
-            <td>${student.email}</td>
-            <td>${student.dept}</td>
-            <td><button class="delete-btn" onclick="deleteStudent(${student.id})">Delete</button></td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
+        <section>
+            <h2>Add Course</h2>
+            <form id="courseForm">
+                <label for="courseName">Course Name:</label>
+                <input type="text" id="courseName" name="courseName" required><br>
 
-    // Delete a student by ID
-    function deleteStudent(id) {
-      const index = students.findIndex(student => student.id === id);
-      if (index !== -1) {
-        students.splice(index, 1); // Remove the student from the array
-        localStorage.setItem('students', JSON.stringify(students)); // Save updated array to localStorage
-        displayStudents(); // Refresh the table
-        alert('Student deleted successfully!');
-      }
-    }
+                <label for="courseDescription">Course Description:</label>
+                <textarea id="courseDescription" name="courseDescription"></textarea><br>
 
-    // Initial display of students
-    displayStudents();
-  </script>
+                <button type="submit">Add Course</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Courses List</h2>
+            <table id="coursesTable">
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Course Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Courses records will appear here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Grades</h2>
+            <form id="gradesForm">
+                <label for="studentID">Student ID:</label>
+                <input type="number" id="studentID" name="studentID" required><br>
+
+                <label for="courseID">Course ID:</label>
+                <input type="number" id="courseID" name="courseID" required><br>
+
+                <label for="grade">Grade:</label>
+                <input type="text" id="grade" name="grade" required><br>
+
+                <button type="submit">Add Grade</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Attendance</h2>
+            <form id="attendanceForm">
+                <label for="attendanceStudentID">Student ID:</label>
+                <input type="number" id="attendanceStudentID" name="attendanceStudentID" required><br>
+
+                <label for="attendanceCourseID">Course ID:</label>
+                <input type="number" id="attendanceCourseID" name="attendanceCourseID" required><br>
+
+                <label for="attendanceStatus">Status:</label>
+                <input type="text" id="attendanceStatus" name="attendanceStatus" required><br>
+
+                <button type="submit">Add Attendance</button>
+            </form>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
